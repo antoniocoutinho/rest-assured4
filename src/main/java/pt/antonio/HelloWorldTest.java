@@ -1,6 +1,8 @@
 package pt.antonio;
 
 import javax.management.RuntimeErrorException;
+
+import static io.restassured.RestAssured.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -28,6 +30,26 @@ public class HelloWorldTest {
 		// Simulating Pass:
 		ValidatableResponse validation = response.then();
 		validation.statusCode(200);
+	}
+
+	@Test
+	public void shouldUseFluentMode() {
+		
+		Response response = request(Method.GET, "http://restapi.wcaquino.me:80/ola");
+		ValidatableResponse validation = response.then();
+		validation.statusCode(200);
+		
+		// Short mode:
+		get("http://restapi.wcaquino.me:80/ola").then().statusCode(200);
+		
+		//Fluent mode:
+		given() //Pre-conditions
+		.when() //Actions
+			.get("http://restapi.wcaquino.me:80/ola")
+		.then()// Validations
+			//.assertThat()
+			//Or
+			.statusCode(200);
 	}
 
 }
