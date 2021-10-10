@@ -11,7 +11,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
@@ -88,5 +87,18 @@ public class HelloWorldTest {
 		assertThat("Test", anyOf(is("Test"), is("Not test")));
 		assertThat("Test", allOf(startsWith("T"), endsWith("t"), containsString("es")));
 		
+	}
+	
+	@Test
+	public void shouldValidateBody()
+	{
+		given()
+		.when()
+			.get("http://restapi.wcaquino.me:80/ola")
+		.then()
+			.body(is("Ola Mundo!"))
+			.body(containsString("Mundo!"))			
+			.body(is(not(nullValue())))
+		;
 	}
 }
