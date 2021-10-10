@@ -5,6 +5,13 @@ import javax.management.RuntimeErrorException;
 import static io.restassured.RestAssured.*;
 import static org.junit.Assert.*;
 
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
@@ -51,5 +58,35 @@ public class HelloWorldTest {
 			//Or
 			.statusCode(200);
 	}
-
+	
+	@Test
+	public void shouldUseHancrestMachers()
+	{
+		// String
+		assertThat("test", is("test"));
+		// int
+		assertThat(100, is(100));
+		//Integer class
+		assertThat(100, isA(Integer.class));
+		// Double class
+		assertThat(100d, isA(Double.class));
+		
+		// greater and less than
+		assertThat(100d, greaterThan(99d));
+		assertThat(100d, lessThan(101d));
+		
+		List<Integer> impares = Arrays.asList(1,3,5,7,9);
+		assertThat(impares, hasSize(5));
+		assertThat(impares, contains(1,3,5,7,9));
+		assertThat(impares, containsInAnyOrder(9,1,3,5,7));
+		assertThat(impares, hasItem(1));
+		assertThat(impares, hasItems(1,3));
+		
+		
+		assertThat("Test", is(not("test")));
+		assertThat("Test", not("test"));
+		assertThat("Test", anyOf(is("Test"), is("Not test")));
+		assertThat("Test", allOf(startsWith("T"), endsWith("t"), containsString("es")));
+		
+	}
 }
