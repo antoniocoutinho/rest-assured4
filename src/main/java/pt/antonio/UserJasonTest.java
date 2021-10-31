@@ -40,6 +40,24 @@ public class UserJasonTest {
 	}
 	
 	@Test
+	public void shouldValidateJsonList()
+	{
+		given()
+		.when()
+			.get("http://restapi.wcaquino.me/users/3")
+		.then()
+			.statusCode(200)
+			.body("id", is(3))
+			.body("name", containsString("Ana"))
+			.body("filhos", hasSize(2))
+			.body("filhos[0].name", is("Zezinho"))
+			.body("filhos[1].name", is("Luizinho"))
+			.body("filhos.name", hasItem("Zezinho"))
+			.body("filhos.name", hasItems("Luizinho", "Zezinho"))
+		;
+	}
+	
+	@Test
 	public void shouldValidateFirstLevelPathExtraction()
 	{
 		Response response = RestAssured.request(Method.GET, "http://restapi.wcaquino.me/users/1");
