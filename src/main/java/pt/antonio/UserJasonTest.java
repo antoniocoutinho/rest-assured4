@@ -25,6 +25,19 @@ public class UserJasonTest {
 			.body("age", greaterThan(18))
 		;
 	}
+	@Test
+	public void shouldValidateSecondLevel()
+	{
+		given()
+		.when()
+			.get("http://restapi.wcaquino.me/users/2")
+		.then()
+			.statusCode(200)
+			.body("id", is(2))
+			.body("name", containsString("Joaquina"))
+			.body("endereco.rua", is("Rua dos bobos"))
+		;
+	}
 	
 	@Test
 	public void shouldValidateFirstLevelPathExtraction()
