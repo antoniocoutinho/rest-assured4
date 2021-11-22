@@ -106,4 +106,31 @@ public class UserJsonTest {
 			.body("error", is("Usuário inexistente"))
 		;
 	}
+	
+	@Test
+	public void shouldAdvancedValidations()
+	{
+		given()
+		.when()
+			.get("http://restapi.wcaquino.me/users")
+		.then()
+			.statusCode(200)
+			.body("$", hasSize(3))//Root
+			.body("age.findAll{it <= 25}.size()", is(2))// findAll return all occurrences
+			.body("age.findAll{it <= 25 && it > 20}.size()", is(1)) 
+			.body("findAll{it.age <= 25 && it.age > 20}.name", hasItem("Maria Joaquina")) // return list should use hasItem
+			.body("findAll{it.age <= 25}[0].name", is("Maria Joaquina")) //return object
+			.body("findAll{it.age <= 25}[-1].name", is("Ana Júlia")) // Last item
+			.body("find{it.age <= 25}.name", is("Maria Joaquina")) // find the fist occurrence
+			.body("findAll{it.name.contains('n')}.name", hasItems("Maria Joaquina", "Ana Júlia")) // find All names containing 'n'
+			.body("findAll{it.name.length() > 10}.name", hasItems("João da Silva", "Maria Joaquina")) // find All names with length > 10
+			.body("name.collect{it.toUpperCase()}", hasItem("MARIA JOAQUINA"))
+			.body("name.findAll{it.startsWith('Maria')}.collect{it.toUpperCase()}", hasItem("MARIA JOAQUINA")) // multple queries
+			.body("name.findAll{it.startsWith('Maria')}.collect{it.toUpperCase()}.toArray()", allOf(arrayContaining("MARIA JOAQUINA"), arrayWithSize(1))) //allOf()
+			.body("id.max()", is(3))
+			.body("salary.min()",is(1234.5678f))
+			.body("salary.findAll{it != null}.sum()", is(closeTo(3734.5678f, 0.001)) )
+			.body("salary.findAll{it != null}.sum()", allOf(greaterThan(3000d), lessThan(5000d)))
+		;
+	}
 }
